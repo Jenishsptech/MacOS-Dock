@@ -3,5 +3,5 @@ import 'package:flutter/material.dart';
 import 'docker.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(DockerAnimation());
 }
