@@ -125,6 +125,7 @@ class _DockerAnimationState extends State<DockerAnimation> {
                 _draggingIndex = index; // Set the dragging icon index
               });
             },
+
             onDragUpdate: (details) {},
             onDragCompleted: () {
               setState(() {

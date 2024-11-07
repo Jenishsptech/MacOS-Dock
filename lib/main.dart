@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:untitled/docker.dart';
 
-import 'animated_red_box.dart';
+void main() => runApp(DockerApp());
 
-
-
-void main() {
-  runApp(MyApp());
+class DockerApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: DockerAnimation(),
+    );
+  }
 }
