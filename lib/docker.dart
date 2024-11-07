@@ -11,6 +11,7 @@ class DockerAnimation extends StatefulWidget {
 
 class _DockerAnimationState extends State<DockerAnimation> {
 
+
   List<String> imageUrls = [
     "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Finder_Icon_macOS_Big_Sur.png/600px-Finder_Icon_macOS_Big_Sur.png?20200704175319",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Safari_2020_logo.svg/640px-Safari_2020_logo.svg.png",
