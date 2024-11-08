@@ -1,8 +1,7 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'dart:math';
-
 
 class DockerAnimation extends StatefulWidget {
   @override
@@ -10,8 +9,6 @@ class DockerAnimation extends StatefulWidget {
 }
 
 class _DockerAnimationState extends State<DockerAnimation> {
-
-
   List<String> imageUrls = [
     "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Finder_Icon_macOS_Big_Sur.png/600px-Finder_Icon_macOS_Big_Sur.png?20200704175319",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Safari_2020_logo.svg/640px-Safari_2020_logo.svg.png",
@@ -33,7 +30,6 @@ class _DockerAnimationState extends State<DockerAnimation> {
 
   @override
   Widget build(BuildContext context) {
-
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -58,7 +54,7 @@ class _DockerAnimationState extends State<DockerAnimation> {
                   filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
                   child: Container(
                     height: 80,
-                    width:80.0*8, // Width of dock container
+                    width: 80.0 * 8, // Width of dock container
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(15),
@@ -72,12 +68,28 @@ class _DockerAnimationState extends State<DockerAnimation> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 30),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(imageUrls.length, (index) {
-                  return _buildDraggableIcon(context, index);
-                }),
+              padding: const EdgeInsets.only(bottom: 20),
+              child: SizedBox(
+                height: 80,
+                width: 80.0 * 9,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    imageUrls.length,
+                    (index) {
+                      if (_potentialDropIndex != null && index == _potentialDropIndex) {
+                        return _buildAnimatedSpace(); // Show animated space where hovering
+                      } else if (_potentialDropIndex != null && index > _potentialDropIndex!) {
+
+
+                        return _buildDraggableIcon(context, index -1); // Adjust index for icons after the potential drop space
+                      } else {
+
+                        return _buildDraggableIcon(context, index);
+                      }
+                    },
+                  ),
+                ),
               ),
             ),
           )
@@ -86,7 +98,23 @@ class _DockerAnimationState extends State<DockerAnimation> {
     );
   }
 
+  // Build the animated space between icons
+  Widget _buildAnimatedSpace() {
+    return Builder(
+      builder: (context) {
+        return AnimatedContainer(
+          duration: Duration(seconds: 1),
+
+          width: _draggingIndex != null ? 60 : 0, // Show space only when dragging
+          height: 60,
+          margin: EdgeInsets.symmetric(horizontal: 10),
+        );
+      }
+    );
+  }
+
   Widget _buildDraggableIcon(BuildContext context, int index) {
+
     return DragTarget<int>(
       onAccept: (draggedIndex) {
         setState(() {
@@ -95,15 +123,13 @@ class _DockerAnimationState extends State<DockerAnimation> {
       },
       onWillAccept: (data) {
         setState(() {
-          _potentialDropIndex =
-              index; // Mark potential drop index for animation
+          _potentialDropIndex = index; // Mark potential drop index for animation
         });
         return data != index; // Prevent drop on the same position
       },
       onLeave: (_) {
         setState(() {
-          _potentialDropIndex =
-          null; // Reset potential drop index when drag leaves
+          _potentialDropIndex = null; // Reset potential drop index when drag leaves
         });
       },
       builder: (context, candidateData, rejectedData) {
@@ -125,8 +151,6 @@ class _DockerAnimationState extends State<DockerAnimation> {
                 _draggingIndex = index; // Set the dragging icon index
               });
             },
-
-            onDragUpdate: (details) {},
             onDragCompleted: () {
               setState(() {
                 _draggingIndex = null; // Reset dragging index after completion
@@ -140,19 +164,24 @@ class _DockerAnimationState extends State<DockerAnimation> {
               });
             },
             feedback: _buildImage(
-                imageUrls[index], true, index), // Show scaled image during drag
+              imageUrls[index],
+              true,
+              index,
+            ),
+            // Show scaled image during drag
             childWhenDragging: AnimatedContainer(
               duration: Duration(milliseconds: 300),
-              width: _draggingIndex == index
-                  ? 0
-                  : 60, // Shrink size to 0 when dragging
+              width: _draggingIndex == index ? 0 : 60,
+              // Shrink size to 0 when dragging
               height: 60,
               margin: EdgeInsets.symmetric(horizontal: 10),
-              child: _buildImage(imageUrls[index], false,
-                  index), // Show faded image when dragging
+              child: _buildImage(imageUrls[index], false, index), // Show faded image when dragging
             ),
             child: _buildImage(
-                imageUrls[index], false, index), // Show normal image
+              imageUrls[index],
+              false,
+              index,
+            ), // Show normal image
           ),
         );
       },
@@ -166,10 +195,7 @@ class _DockerAnimationState extends State<DockerAnimation> {
       scale = 1.5;
     }
 
-    double additionalWidth =
-    (_potentialDropIndex != null && index == _potentialDropIndex)
-        ? 40.0
-        : 0.0;
+    double additionalWidth = (_potentialDropIndex != null && index == _potentialDropIndex) ? 40.0 : 0.0;
 
     return AnimatedContainer(
       duration: Duration(milliseconds: 300),
