@@ -4,8 +4,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 
-
-
 class DockerAnimation extends StatefulWidget {
   @override
   _DockerAnimationState createState() => _DockerAnimationState();
